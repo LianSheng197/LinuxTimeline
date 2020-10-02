@@ -22,6 +22,9 @@ PROJNAME='gldt'
 # Which files to include into the archive
 DISTFILES='gldt.csv gldt.conf CHANGELOG README.md LICENSE images build.sh CONTRIBUTING'
 
+# Export PNG? (about 10 MB, it is very big!)
+EXPORT_PNG=false
+
 #
 ##########
 # Code starts here
@@ -33,8 +36,8 @@ type -P which &>/dev/null || { echo "which not found: aborting" >&2; exit 1;}
 
 # Check if custom path is valid and nonempty. Otherwise try to get it via which.
 type -P $GC &>/dev/null && [ -n "$GC" ] ||
-	{ [ -n "$GC" ] && echo "No gnuclad in custom path: using PATH (which)";
-	GC=$(which gnuclad); }
+{ [ -n "$GC" ] && echo "No gnuclad in custom path: using PATH (which)";
+GC=$(which gnuclad); }
 
 # If GC is present (nonempty), check for svg shortcut. Otherwise abort.
 [ -n "$GC" ] || { echo "gnuclad not found: aborting" >&2; exit 1; }
@@ -46,9 +49,11 @@ echo -e "$CHECK"
 [[ `echo -e "$CHECK" | grep "^Error:"` ]] && exit 1;
 
 # Check for Inkscape and run it if present. Otherwise ignore.
-INK=$(which inkscape)
-[ -n "$INK" ] || echo "Inkscape not found: will not generate png"
-[ -n "$INK" ] && $INK $PROJNAME$VERS.svg -D --export-type=png
+if [ "$EXPORT_PNG" = true ]; then
+    INK=$(which inkscape)
+    [ -n "$INK" ] || echo "Inkscape not found: will not generate png"
+    [ -n "$INK" ] && $INK "$PROJNAME$VERS.svg" -D --export-png="$PROJNAME$VERS.png"
+fi
 
 # Packaging
 echo "Packaging..."
@@ -61,7 +66,9 @@ bzip2 $PROJNAME$VERS.tar
 BDIR="DIST_$PROJNAME$VERS"
 mkdir -p $BDIR
 mv $PROJNAME$VERS.svg $BDIR
-[ -n "$INK" ] && mv $PROJNAME$VERS.png $BDIR
+if [ "$EXPORT_PNG" = true ]; then
+    [ -n "$INK" ] && mv $PROJNAME$VERS.png $BDIR
+fi
 mv $PROJNAME$VERS.tar.bz2 $BDIR
 
 echo "Distribution can be found in $BDIR"
