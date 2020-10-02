@@ -1,0 +1,13 @@
+Package: gnuclad
+Version: 0.2.4
+Section: misc
+Priority: optional
+Architecture: amd64
+Bugs: https://bugs.launchpad.net/gnuclad
+Homepage: https://launchpad.net/gnuclad
+Depends: libc6, dpkg (>= 1.15.4) | install-info
+Suggests: inkscape (>= 0.46)
+Maintainer: UP FOR GRABS, contact <donjan@dyx.ch>
+Description: A cladogram generator
+ .
+ that allows you to generate timelines as seen on http://futurist.se/gldt/

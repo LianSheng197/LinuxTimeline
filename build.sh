@@ -13,7 +13,8 @@
 
 # Custom path to gnuclad (leave empty if you already installed it in
 # your PATH)
-GC=
+# https://github.com/FabioLolix/gnuclad
+GC="./gnuclad-0.2.4_amd64/usr/bin/gnuclad"
 
 # The basename of the .csv and .conf file
 PROJNAME='gldt'
